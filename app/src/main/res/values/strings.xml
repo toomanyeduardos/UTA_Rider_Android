@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">UTA Rider</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Tabs related -->
+    <string name="tab_favorites">Favorites</string>
+    <string name="tab_routes">Routes</string>
+    <string name="tab_map">Map</string>
+    <string name="tab_twitter">Twitter</string>
+
+    <!-- Routes related -->
+    <string name="route_title_trax">Trax</string>
+    <string name="route_title_frontrunner">Frontrunner</string>
+    <string name="route_title_bus">Bus</string>
+    <string name="route_favorite_empty">There are no favorite routes</string>
+    <string name="route_favorite">Favorite Routes</string>
+
+</resources>

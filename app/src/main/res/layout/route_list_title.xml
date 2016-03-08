@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/route_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/common_action_bar_splitter"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:text="TITLE"
+        android:textAllCaps="true"/>
+
+</LinearLayout>

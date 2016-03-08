@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/timeline_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="#RideUTA"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/twitter_logo_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/timeline_name_layout"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/twitter_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_rideutalogo"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tweet_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/twitter_logo_layout"
+        android:layout_alignTop="@id/twitter_logo_layout">
+
+        <TextView
+            android:id="@+id/tweet_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TWEET CONTENT"/>
+
+        <TextView
+            android:id="@+id/tweet_time_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TWEET TIME AND DATE"
+            android:layout_gravity="end"
+            android:gravity="end"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
