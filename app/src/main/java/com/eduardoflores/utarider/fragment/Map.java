@@ -40,11 +40,14 @@ import retrofit.client.Response;
  */
 public class Map extends Fragment
 {
+
+    Handler timerHandler = new Handler();
+
     private GoogleMap googleMap;
 
     private MainActivity activity;
 
-    private long timerDelay = 1000 * 60;  // milliseconds
+    private long timerDelay = 1000 * 120;  // milliseconds
 
     private Callback<Vehicle> vehicleDataCallback = new Callback<Vehicle>() {
         @Override
@@ -77,7 +80,6 @@ public class Map extends Fragment
         }
     };
 
-    Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable()
     {
         @Override
