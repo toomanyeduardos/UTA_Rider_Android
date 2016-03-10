@@ -4,6 +4,7 @@ import com.eduardoflores.utarider.R;
 import com.eduardoflores.utarider.model.twitter.Tweet;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,9 @@ public class TwitterAdapter extends ArrayAdapter<Tweet>
         tweetContent.setText(tweetList.get(position).tweet_text);
         tweetTimeDate.setText(tweetList.get(position).tweet_date);
 
+        if (!tweetList.get(position).tweet_text.startsWith("@")) {
+            tweetContent.setTextColor(Color.BLACK);
+        }
         return view;
     }
 }

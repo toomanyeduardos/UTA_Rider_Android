@@ -7,7 +7,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.eduardoflores.utarider.AnalyticsTrackers;
@@ -16,6 +15,7 @@ import com.eduardoflores.utarider.activity.MainActivity;
 import com.eduardoflores.utarider.model.localfiles.Route;
 import com.eduardoflores.utarider.model.localfiles.Stop;
 import com.eduardoflores.utarider.model.service.MonitoredVehicleJourney;
+import com.eduardoflores.utarider.model.service.OnwardCall;
 import com.eduardoflores.utarider.model.service.Vehicle;
 import com.eduardoflores.utarider.service.UTAService;
 
@@ -28,7 +28,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -56,20 +55,16 @@ public class Map extends Fragment
             {
                 addMarkersForVehicles(monitoredVehicleJourney);
 
-//                if (monitoredVehicleJourney.onwardCalls != null &&
-//                        monitoredVehicleJourney.onwardCalls.get(0) != null)
-//                {
-//                    for (OnwardCall onwardCall : monitoredVehicleJourney.onwardCalls)
-//                    {
-//                        for(final com.eduardoflores.utarider.model.localfiles.Stop stop : activity.arrayOfStops)
-//                        {
-//                            if (onwardCall.stopPointRef.equals(stop.stopId))
-//                            {
-//                                addMarkersForStop(stop);
-//                            }
-//                        }
-//                    }
-//                }
+                if (monitoredVehicleJourney.onwardCalls != null &&
+                        monitoredVehicleJourney.onwardCalls.get(0) != null) {
+                    for (OnwardCall onwardCall : monitoredVehicleJourney.onwardCalls) {
+                        for (final com.eduardoflores.utarider.model.localfiles.Stop stop : activity.arrayOfStops) {
+                            if (onwardCall.stopPointRef.equals(stop.stopId)) {
+                                addMarkersForStop(stop);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -97,22 +92,22 @@ public class Map extends Fragment
         markerForStops.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_train_station));
         googleMap.addMarker(markerForStops);
 
-        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                View infoView = activity.getLayoutInflater().inflate(R.layout.map_info_viewer, null);
-                TextView mapStopName = (TextView) infoView.findViewById(R.id.map_marker_stop_name);
-
-                mapStopName.setText(marker.getTitle());
-
-                return infoView;
-            }
-        });
+//        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+//            @Override
+//            public View getInfoWindow(Marker marker) {
+//                return null;
+//            }
+//
+//            @Override
+//            public View getInfoContents(Marker marker) {
+//                View infoView = activity.getLayoutInflater().inflate(R.layout.map_info_viewer, null);
+//                TextView mapStopName = (TextView) infoView.findViewById(R.id.map_marker_stop_name);
+//
+//                mapStopName.setText(marker.getTitle());
+//
+//                return infoView;
+//            }
+//        });
     }
 
     private void addMarkersForVehicles(MonitoredVehicleJourney monitoredVehicleJourney)

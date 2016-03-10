@@ -10,11 +10,14 @@ import com.eduardoflores.utarider.listener.OnRouteSelectedListener;
 import com.eduardoflores.utarider.model.localfiles.Route;
 import com.eduardoflores.utarider.utils.AppUtils;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -141,17 +144,43 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getOrder()) {
+            case 100:   // About dialog
+                displayAboutDialog();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private void displayAboutDialog() {
+        String version = null;
+
+        try {
+            version = getApplication().getPackageManager().getPackageInfo(getApplication().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
 
-        return super.onOptionsItemSelected(item);
+        String message = "App created by Eduardo Flores in South Jordan, UT.\n" +
+                "For additional information please contact me at toomanyeduardos@gmail.com.\n\n" +
+                "App version: " + version;
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setTitle("About UTA Rider");
+
+        alertDialogBuilder.setMessage(message)
+                .setCancelable(false)
+                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }
+                );
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void sortRoutes()
