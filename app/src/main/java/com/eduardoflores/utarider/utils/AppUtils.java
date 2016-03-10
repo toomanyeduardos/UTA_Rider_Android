@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * @author Eduardo Flores
@@ -117,4 +116,13 @@ public class AppUtils
         }
         return arrayOfStops;
     }//end getListOfStops
+
+    public static Route getRouteFromRouteId(Context context, String routeId) {
+        for (Route route : getListOfRoutes(context)) {
+            if (route.routeId.equals(routeId)) {
+                return route;
+            }
+        }
+        return null;
+    }
 }

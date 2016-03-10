@@ -2,18 +2,12 @@ package com.eduardoflores.utarider.activity;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.gson.Gson;
 
 import com.eduardoflores.utarider.AnalyticsTrackers;
 import com.eduardoflores.utarider.R;
 import com.eduardoflores.utarider.fragment.PagerAdapter;
 import com.eduardoflores.utarider.listener.OnRouteSelectedListener;
 import com.eduardoflores.utarider.model.localfiles.Route;
-import com.eduardoflores.utarider.model.service.MonitoredVehicleJourney;
-import com.eduardoflores.utarider.model.service.OnwardCall;
-import com.eduardoflores.utarider.model.service.Stop;
-import com.eduardoflores.utarider.model.service.Vehicle;
-import com.eduardoflores.utarider.service.UTAService;
 import com.eduardoflores.utarider.utils.AppUtils;
 
 import android.content.SharedPreferences;
@@ -23,8 +17,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.ArraySet;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,10 +28,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity implements OnRouteSelectedListener{
 
@@ -63,11 +51,13 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
 
     public List<Route> listOfFavoriteRoutes;
 
-    public Set<String> setOfFavoriteRoutes;
+    public Set<String> setFavoriteRoutes;
+
+    public SharedPreferences sharedPreferences;
 
     private ViewPager viewPager;
 
-    public SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
 
         listOfRoutesSelected = new ArrayList<>();
         listOfFavoriteRoutes = new ArrayList<>();
-        setOfFavoriteRoutes = new HashSet<String>();
 
         // Tabs and viewpager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -121,7 +110,15 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
             }
         });
 
-        sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+
+        // read favorite routes
+        editor = sharedPreferences.edit();
+        setFavoriteRoutes = new HashSet<String>(sharedPreferences.
+                getStringSet(SHARED_PREFERENCES_ROUTES, new HashSet<String>()));
+        for (String favoriteRouteId : setFavoriteRoutes) {
+            onRouteFavorited(AppUtils.getRouteFromRouteId(this, favoriteRouteId), null, null);
+        }
 
         // send analytics that app opened
         AnalyticsTrackers.initialize(this);
@@ -202,26 +199,31 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
     @Override
     public void onRouteFavorited(Route route, View view, ArrayAdapter<Route> adapter)
     {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String routeJson = gson.toJson(route);
 
         ImageButton imageButton = (ImageButton)view;
         if (listOfFavoriteRoutes.contains(route))
         {
             route.isFavorite = false;
             listOfFavoriteRoutes.remove(route);
-            imageButton.setImageResource(R.drawable.ic_star_empty);
+            if (imageButton != null) {
+                imageButton.setImageResource(R.drawable.ic_star_empty);
+            }
         }
         else
         {
             route.isFavorite = true;
             listOfFavoriteRoutes.add(route);
-            setOfFavoriteRoutes.add(routeJson);
-            imageButton.setImageResource(R.drawable.ic_star_selected);
-            editor.putStringSet(SHARED_PREFERENCES_ROUTES, setOfFavoriteRoutes);
+            setFavoriteRoutes.add(route.routeId);
+            if (imageButton != null) {
+                imageButton.setImageResource(R.drawable.ic_star_selected);
+            }
         }
-        editor.commit();
-        adapter.notifyDataSetChanged();
+        //editor.commit();
+
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+
+        editor.putStringSet(SHARED_PREFERENCES_ROUTES, new HashSet<String>(setFavoriteRoutes)).commit();
     }
 }

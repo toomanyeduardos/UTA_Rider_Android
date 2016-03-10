@@ -16,7 +16,6 @@ import com.eduardoflores.utarider.activity.MainActivity;
 import com.eduardoflores.utarider.model.localfiles.Route;
 import com.eduardoflores.utarider.model.localfiles.Stop;
 import com.eduardoflores.utarider.model.service.MonitoredVehicleJourney;
-import com.eduardoflores.utarider.model.service.OnwardCall;
 import com.eduardoflores.utarider.model.service.Vehicle;
 import com.eduardoflores.utarider.service.UTAService;
 
@@ -57,20 +56,20 @@ public class Map extends Fragment
             {
                 addMarkersForVehicles(monitoredVehicleJourney);
 
-                if (monitoredVehicleJourney.onwardCalls != null &&
-                        monitoredVehicleJourney.onwardCalls.get(0) != null)
-                {
-                    for (OnwardCall onwardCall : monitoredVehicleJourney.onwardCalls)
-                    {
-                        for(final com.eduardoflores.utarider.model.localfiles.Stop stop : activity.arrayOfStops)
-                        {
-                            if (onwardCall.stopPointRef.equals(stop.stopId))
-                            {
-                                addMarkersForStop(stop);
-                            }
-                        }
-                    }
-                }
+//                if (monitoredVehicleJourney.onwardCalls != null &&
+//                        monitoredVehicleJourney.onwardCalls.get(0) != null)
+//                {
+//                    for (OnwardCall onwardCall : monitoredVehicleJourney.onwardCalls)
+//                    {
+//                        for(final com.eduardoflores.utarider.model.localfiles.Stop stop : activity.arrayOfStops)
+//                        {
+//                            if (onwardCall.stopPointRef.equals(stop.stopId))
+//                            {
+//                                addMarkersForStop(stop);
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
 
