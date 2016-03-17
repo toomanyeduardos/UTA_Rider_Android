@@ -3,6 +3,15 @@
     <string name="action_settings">Settings</string>
     <string name="app_about">About UTA Rider</string>
 
+    <!-- Permissions dialog -->
+    <string name="permissions_denied_dialog_title">Permission Denied</string>
+    <string name="permissions_denied_dialog_message">
+        This app requires location services. Without location permissions this app cannot run and will need to close.
+    </string>
+    <string name="permissions_denied_dialog_close_app">Close App</string>
+    <string name="permissions_denied_dialog_try_again">Request Permissions Again</string>
+
+
     <!-- Tabs related -->
     <string name="tab_favorites">Favorites</string>
     <string name="tab_routes">Routes</string>

@@ -10,6 +10,8 @@ import com.eduardoflores.utarider.listener.OnRouteSelectedListener;
 import com.eduardoflores.utarider.model.localfiles.Route;
 import com.eduardoflores.utarider.utils.AppUtils;
 
+import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
     private ViewPager viewPager;
 
     private SharedPreferences.Editor editor;
+
+    private static final String[] INITIAL_PERMS = {Manifest.permission.ACCESS_FINE_LOCATION};
+
+    private static final int LOCATION_REQUEST = 1337;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +130,14 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
             onRouteFavorited(AppUtils.getRouteFromRouteId(this, favoriteRouteId), null, null);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if ( !isLocationAllowed())
+            {
+                requestPermissions(INITIAL_PERMS, LOCATION_REQUEST);
+            }
+        }
+
         // send analytics that app opened
         AnalyticsTrackers.initialize(this);
         Tracker tracker = AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
@@ -133,6 +148,46 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
     public synchronized Tracker getGoogleAnalyticsTracker() {
         AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
         return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+            case LOCATION_REQUEST:
+                if ( !isLocationAllowed())
+                {
+                    DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.permissions_denied_dialog_title)
+                            .setMessage(R.string.permissions_denied_dialog_message);
+                    builder.setNegativeButton(R.string.permissions_denied_dialog_close_app,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setPositiveButton(R.string.permissions_denied_dialog_try_again,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestPermissions(INITIAL_PERMS, LOCATION_REQUEST);
+                                }
+                            });
+                    builder.show();
+
+                }
+                break;
+        }
     }
 
     @Override
@@ -150,6 +205,11 @@ public class MainActivity extends AppCompatActivity implements OnRouteSelectedLi
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isLocationAllowed()
+    {
+        return (PackageManager.PERMISSION_GRANTED == checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
     }
 
     private void displayAboutDialog() {
